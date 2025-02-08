@@ -1,0 +1,25 @@
+services:
+  mongo:
+    image: mongo:latest
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - ./data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+
+  express:
+    build:
+      context: .
+    container_name: mern-wellness-server-express-mangodb
+    ports:
+      - "5001:5001"
+    depends_on:
+      - mongo
+    environment:
+      MONGO_URI: mongodb://root:example@mongodb:27017/health-data?authSource=admin
+    volumes:
+      - .:/app
+      - /app/node_modules
